@@ -58,12 +58,12 @@ class App extends Component {
       <div className="App">
         {/* Header */}
         <header>
-          <div className="title">MVHS CodeWars</div>
+          <div className="title">MVHS Codewars</div>
           <div className="subtitle">Mountain View High School Computer Science</div>
-          <div className="teacher">Mr. Dilloughery</div>
+          <div className="teacher">Join The Leaderboard: bit.ly/2SgKowb</div>
         </header>
         <div className="scoreboard-container">
-          <div className="scoreboard-title">CodeWars Scoreboard</div>
+          <div className="scoreboard-title">Codewars Scoreboard</div>
           <div className="scoreboard-tab">
             <div 
               className={selectedScoreboard === "overall" ? "tab-item selected" : "tab-item"} 
@@ -123,7 +123,7 @@ class App extends Component {
     let promises = [];
     for (let user of userList) {
       let promise = new Promise((resolve, reject) => {
-          fetch("https://cors-anywhere.herokuapp.com/https://www.codewars.com/api/v1/users/" + user.userName).then((res) => res.json()).then((json) => {
+        fetch("/v1/users/" + user.userName).then((res) => res.json()).then((json) => {
           resolve(json);
         })
       })
