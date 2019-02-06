@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/mvhscodewars/static/css/main.8f9f8876.chunk.css"
   },
   {
-    "revision": "1b5bc0b4daa7d309cead12e90293d19a",
+    "revision": "db8ff1e2899fc672990bc101a8e20d0b",
     "url": "/mvhscodewars/index.html"
   }
 ];
