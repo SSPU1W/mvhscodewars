@@ -1,0 +1,35 @@
+header {
+    position: relative;
+    z-index: 2;
+    background-color: #eddd09;
+    color: white;
+    padding: 5vw;
+    margin: 0 5vw 5vw 5vw;
+    box-shadow: 0 2px 30px rgba(0,0,0,0.28);
+}
+
+header .title {
+    margin: 0 0 2vw 0;
+}
+
+header .subtitle, .teacher {
+    margin: 2vw 0 0;
+    font-size: 4vw;
+}
+
+@media only screen and (min-width: 800px) {
+    header {
+        margin: 5vw 0 0 5vw;
+        width: 50vw;
+        padding: 3vw 5vw;
+    }
+    header .title {
+        font-size: 2.5vw;
+        margin: 0 0 1vw 0;
+    }
+    header .subtitle,.teacher {
+        font-size: 1.5vw;
+        font-weight: 300;
+        margin: 0.5vw 0 0;
+    }
+}
