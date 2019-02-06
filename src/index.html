@@ -19,7 +19,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>MVHS Codewars</title>
+    <title>React App</title>
   </head>
   <body>
     <noscript>
@@ -35,5 +35,20 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script src="https://apis.google.com/js/api.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAVinkqZc8WdOS_1hgjZtPyCzw4D-Grezo",
+    authDomain: "my-project-1543964200137.firebaseapp.com",
+    databaseURL: "https://my-project-1543964200137.firebaseio.com",
+    projectId: "my-project-1543964200137",
+    storageBucket: "my-project-1543964200137.appspot.com",
+    messagingSenderId: "516646769032"
+  };
+  firebase.initializeApp(config);
+</script>
   </body>
 </html>
