@@ -1,3 +1,62 @@
+.App {
+    position: relative;
+}
+.menu-button {
+    position: absolute;
+    right: 5vw;
+    top: 5vw;
+    background-color: white;
+    padding: 0.5vw 2vw;
+    border-radius: 5vw;
+    box-shadow: 0 2px 18px 0 rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+.menu-button:hover {
+    transform: scale(1.1);
+}
+
+.admin-menu {
+    position: fixed;
+    width: 90vw;
+    height: calc(100vh - 10vw);
+    left: 3vw;
+    top: 3vw;
+    background-color: white;
+    border-radius: 0.5vw;
+    padding: 2vw;
+    box-shadow: 0 2px 18px 0 rgba(0,0,0, 0.5);
+    z-index: 12;
+}
+.admin-menu .login-menu {
+    display: grid;
+    justify-self: center;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    grid-gap: 1vw;
+}
+.login-menu label {
+    font-weight: 700;
+}
+.login-menu input {
+    font-size: 1.5vw;
+    font-family: "Source Sans Pro";
+    text-align: center;
+}
+.login-menu .login-button {
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,0.2);
+    background-color: white;
+    border-radius: 2px;
+    padding: 0.5vw 1vw;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.login-menu .login-button:hover {
+    transform: scale(1.1);
+}
+
 .scoreboard-container {
     background-color: #eddd09;
     box-shadow: 0 2px 30px 0 rgba(0,0,0,0.28);

@@ -21,6 +21,10 @@ class App extends Component {
       yearOptions.push({value: i + "-" + i+1, label: i + "-" + (i+1)});
     }
     this.state = {
+      adminState: false,
+      loggedIn: false,
+      passcodeText: "",
+      newUserText: "",
       users: [],
       yearOptions: yearOptions,
       selectedScoreboard: "overall",
@@ -62,6 +66,27 @@ class App extends Component {
           <div className="subtitle">Mountain View High School Computer Science</div>
           <div className="teacher">Mr. Dilloughery</div>
         </header>
+        <div className="menu-button" onClick={() => this.setState({adminState: true})}>Admin</div>
+        {
+          this.state.adminState ? <div className="admin-menu">
+            {
+               !this.state.loggedIn ? <div className="login-menu">
+                <label>Passcode</label>
+                <input type="text" onChange={(e) => this.setState({passcodeText: e.target.value})} text={this.state.passcodeText}/>
+                <div className="login-button" onClick={(e) => this.login(e)}>Login</div>
+               </div>
+               :
+              <div className="login-menu">
+                {/* actually add user label */}
+                <label>Add User</label>
+                <input type="text" onChange={(e) => this.setState({newUserText: e.target.value})} text={this.state.newUserText}/>
+                <div className="login-button" onClick={() => this.addUser()}>Add User</div>
+              </div>
+            }
+           
+          </div> : ""
+        }
+        
         <div className="scoreboard-container">
           <div className="scoreboard-title">CodeWars Scoreboard</div>
           <div className="scoreboard-tab">
@@ -96,6 +121,15 @@ class App extends Component {
         </div>
       </div>
     );
+  }
+
+  login = (e) => {
+    if (this.state.passcodeText === "4351") {
+      this.setState({loggedIn: true, passcodeText: ""});
+    }
+  }
+  addUser = (e) => {
+    
   }
 
   // init for google apps script
