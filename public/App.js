@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import config from "./config";
-import { load } from "./helpers/spreadsheet";
+import { load, addUser } from "./helpers/spreadsheet";
 import "./header.css";
 import "./App.css";
 import Scoreboard from './components/Scoreboard';
@@ -21,6 +21,13 @@ class App extends Component {
       yearOptions.push({value: i + "-" + i+1, label: i + "-" + (i+1)});
     }
     this.state = {
+      adminState: false,
+      loggedIn: false,
+      passcodeText: "",
+      newUserText: "",
+      isCurrentStudent: true,
+      inputYearValue: "",
+      errorCode: "",
       users: [],
       yearOptions: yearOptions,
       selectedScoreboard: "overall",
@@ -29,7 +36,8 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    window.gapi && window.gapi.load("client", this.initClient);
+    window.gapi && window.gapi.load("client:auth2", this.initClient);
+    //window.gapi && window.gapi.load("auth2", () => {window.gapi.auth2.init({"client_id": config.clientId})});
   }
   render() {
     let {selectedScoreboard, selectedOption, users, spreadsheetList} = this.state;
@@ -58,10 +66,38 @@ class App extends Component {
       <div className="App">
         {/* Header */}
         <header>
-          <div className="title">MVHS CodeWars</div>
+          <div className="title">MVHS Codewars</div>
           <div className="subtitle">Mountain View High School Computer Science</div>
-          <div className="teacher">Mr. Dilloughery</div>
+          <div className="teacher">Join the Leaderboard: bit.ly/2SgKowb</div>
         </header>
+        <div className="menu-button" onClick={() => this.setState({adminState: true})}>Admin</div>
+        {
+          this.state.adminState ? <div className="admin-menu">
+          <div className="background-view"></div>
+            <div className="x-button" onClick={() => this.setState({adminState: false})}>x</div>
+            {
+               !this.state.loggedIn ? <div className="menu login-menu">
+                <label>Passcode</label>
+                <input type="text" id="login-field" onChange={(e) => this.setState({passcodeText: e.target.value})} value={this.state.passcodeText}/>
+                <div className="login-button" onClick={(e) => this.login(e)}>Login</div>
+                <div className="error-code-label">{this.state.errorCode}</div>
+               </div>
+               :
+              <div className="menu user-menu">
+                {/* actually add user label */}
+                <label>Add User</label>
+                <input type="text" id="add-user" onChange={(e) => this.setState({newUserText: e.target.value})} value={this.state.newUserText}/>
+                <label>Is Current Student</label>
+                <input type="checkbox" checked={this.state.isCurrentStudent} onChange={e => this.setState({isCurrentStudent: e.target.checked})}/>
+                <label>Year</label>
+                <input type="text" placeholder="YYYY-YYYY" value={this.state.inputYearValue} onChange={e => this.setState({inputYearValue: e.target.value})}/>
+                <div className="login-button" onClick={() => this.addUser()}>Add User</div>
+                <div className="error-code-label">{this.state.errorCode}</div>
+              </div>
+            }
+          </div> : ""
+        }
+        
         <div className="scoreboard-container">
           <div className="scoreboard-title">CodeWars Scoreboard</div>
           <div className="scoreboard-tab">
@@ -98,14 +134,63 @@ class App extends Component {
     );
   }
 
+  login = (e) => {
+    if (this.state.passcodeText === "4351") {
+      if (!window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
+        window.gapi.auth2.getAuthInstance().signIn();
+      }
+      this.setState({loggedIn: true, passcodeText: "", newUserText: "", errorCode: ""});
+      return;
+    }
+    this.setState({
+      errorCode: "Incorrect passcode"
+    });
+  }
+  addUser = (e) => {
+    if (this.state.inputYearValue.length !== 9 || this.state.inputYearValue.length === 0) {
+      this.setState({errorCode: "Incorrect year formatting"});
+      return;
+    }
+    const splitted = this.state.inputYearValue.split("-").map(val => parseInt(val));
+    if (splitted.length !== 2) {
+      this.setState({errorCode: "Incorrect year formatting"});
+      return;
+    }
+    if (this.state.newUserText.length === 0) {
+      this.setState({errorCode: "Input a user name"});
+      return;
+    }
+
+    if (splitted[0] && splitted[1] && splitted[0] > 1000 && splitted[1] > 1000 && splitted[0] < 10000 && splitted[1] < 10000 && splitted[1] === splitted[0] + 1) {
+      this.setState({errorCode: ""});
+      addUser({
+        user: this.state.newUserText,
+        isCurrentStudent: this.state.isCurrentStudent,
+        year: this.state.inputYearValue
+      }, (response) => {
+        this.setState({
+          adminState: false
+        }, () => {
+          load(this.onLoad);
+        })
+      });
+      return;
+    }
+    this.setState({errorCode: "Incorrect year formatting"});
+    return;
+  }
+
   // init for google apps script
   initClient = () => {
     // 2. Initialize the JavaScript client library.
     window.gapi.client
       .init({
         apiKey: config.apiKey,
+        clientId: config.clientId,
         // Your API key will be automatically added to the Discovery Document URLs.
-        discoveryDocs: config.discoveryDocs
+        discoveryDocs: config.discoveryDocs,
+        scope: "https://www.googleapis.com/auth/spreadsheets"
+
       })
       .then(() => {
       // 3. Initialize and make the API request.
@@ -123,7 +208,7 @@ class App extends Component {
     let promises = [];
     for (let user of userList) {
       let promise = new Promise((resolve, reject) => {
-        fetch("/v1/users/" + user.userName).then((res) => res.json()).then((json) => {
+          fetch("https://cors-anywhere.herokuapp.com/https://www.codewars.com/api/v1/users/" + user.userName).then((res) => res.json()).then((json) => {
           resolve(json);
         })
       })
